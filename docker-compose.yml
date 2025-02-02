@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
+  go-queue:
+    build: ./go-queue
+    depends_on:
+      - redis
+    ports:
+      - "8080:8080"
+
+  laravel-app:
+    build: ./backend-consumer
+    depends_on:
+      - redis
+      - go-queue
